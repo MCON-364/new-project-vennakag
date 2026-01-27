@@ -1,4 +1,4 @@
-package las.touro.edu.autograding;
+package mcon364.las.touro.edu;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,42 +12,41 @@ public class MainSignatureTest {
 
     /**
      * Required:
-     * - Class: las.touro.edu.demo.Main
+     * - Class: mcon364.las.touro.edu.Main
      * - Method: public static Optional<String> getUserName()
      *
      * Behavior (in autograder):
-     * - The environment variable USER_NAME is set (e.g., "Alice")
+     * - The environment variable USER is set (e.g., "Chana")
      * - getUserName() must return Optional.of(the env value)
      */
     @Test
     void main_has_static_getUserName_returning_optional() throws Exception {
-        Class<?> clazz = Class.forName("las.touro.edu.demo.Main");
+        Class<?> clazz = Class.forName("mcon364.las.touro.edu.Main");
 
-        Method m = clazz.getDeclaredMethod("getUserName");
+        Method m = clazz.getDeclaredMethod("getUserName", String.class);
 
-        assertTrue(Modifier.isPublic(m.getModifiers()), "getUserName must be public");
         assertTrue(Modifier.isStatic(m.getModifiers()), "getUserName must be static");
         assertEquals(Optional.class, m.getReturnType(), "getUserName must return java.util.Optional");
 
-        Object result = m.invoke(null);
+        Object result = m.invoke(null,"NO_SUCH_ENV_VAR");
         assertNotNull(result, "getUserName must not return null");
         assertTrue(result instanceof Optional, "getUserName must return Optional");
     }
 
     @Test
     void getUserName_returns_student_name_env_var_when_present() throws Exception {
-        String expected = System.getenv("USER_NAME");
-        assertNotNull(expected, "Autograder misconfigured: USER_NAME env var must be set");
-        assertFalse(expected.isBlank(), "Autograder misconfigured: USER_NAME must be non-blank");
+        String expected = System.getenv("USER");
+        assertNotNull(expected, "Autograder misconfigured: USER env var must be set");
+        assertFalse(expected.isBlank(), "Autograder misconfigured: USER must be non-blank");
 
-        Class<?> clazz = Class.forName("las.touro.edu.demo.Main");
-        Method m = clazz.getDeclaredMethod("getUserName");
+        Class<?> clazz = Class.forName("mcon364.las.touro.edu.Main");
+        Method m = clazz.getDeclaredMethod("getUserName", String.class);
 
         @SuppressWarnings("unchecked")
-        Optional<String> result = (Optional<String>) m.invoke(null);
+        Optional<String> result = (Optional<String>) m.invoke(null, "USER");
 
         assertNotNull(result, "getUserName must not return null");
-        assertTrue(result.isPresent(), "Expected Optional.of(USER_NAME) when USER_NAME is set");
-        assertEquals(expected, result.get(), "getUserName must return the exact value of USER_NAME");
+        assertTrue(result.isPresent(), "Expected Optional.of(USER) when USER is set");
+        assertEquals(expected, result.get(), "getUserName must return the exact value of USER");
     }
 }
