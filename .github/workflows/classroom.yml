@@ -40,6 +40,6 @@ jobs:
       - name: Report autograding results
         uses: education/autograding-grading-reporter@v1
         env:
-          GRADING_RESULTS: "${{ steps.autograder.outputs.grading-score }}"
+          AUTOGRADER_RESULTS: "${{ steps.autograder.outputs.grading-score }}"
         with:
           runners: autograding
